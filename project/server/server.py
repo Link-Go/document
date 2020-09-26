@@ -1,12 +1,12 @@
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
+from fastapi import HTTPException
 
 app = FastAPI()
 
-
-@app.get("/")
-async def index():
-    return "Hello, World"
+# @app.get("/")
+# async def index():
+#     return "Hello, World"
 
 
 @app.get("/sangfor/auth")
@@ -51,6 +51,19 @@ async def devices(token_auth: str):
                             }])
     else:
         return JSONResponse(status_code=401, content={"message": "认证失败"})
+
+
+@app.get("/")
+async def index():
+    return JSONResponse(status_code=404, content={"messgae": "这是404错误"})
+
+
+@app.get("/except")
+async def exceptTest():
+    try:
+        1 / 0
+    except ZeroDivisionError:
+        raise HTTPException(status_code=404, detail="这也是一个错误")
 
 
 if __name__ == "__main__":
